@@ -1,6 +1,6 @@
 (function(){
 	var app=angular.module("githubViewer",[])
-	function MainController($scope,$http,$interval) {
+	function MainController($scope,$http,$interval,$anchorScroll,$location) {
 		var onUserComplete=function(response){
 			$scope.user=response.data;
 			$http.get($scope.user.repos_url).then(onRepos,onError);
@@ -8,6 +8,8 @@
 	
 		var onRepos=function(response){
 			$scope.repos=response.data;
+			$location.hash("userdetails");
+			$anchorScroll();
 		};
 		
 		var onError=function(reason){
@@ -30,6 +32,7 @@
 			$http.get("https://api.github.com/users/"+username).then(onUserComplete,onError);
 			if(countdownInterval){
 				$interval.cancel(countdownInterval);
+				$scope.countdown=null;
 			}
 		};
 
